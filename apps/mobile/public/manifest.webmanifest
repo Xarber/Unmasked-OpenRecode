@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Unmasked",
+  "short_name": "Unmasked",
+  "description": "A quieter space for genuine conversations. Be real. No covers.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F7F7FC",
+  "theme_color": "#6269F5",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Conversations", "url": "/" },
+    { "name": "Connections", "url": "/connections" }
+  ]
+}

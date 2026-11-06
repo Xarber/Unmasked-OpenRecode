@@ -14,26 +14,27 @@
     "mobile": "npm run start -w @unmasked/mobile",
     "test": "tsx --test apps/api/tests/*.test.ts packages/contracts/src/*.test.ts",
     "typecheck": "tsc -p apps/api/tsconfig.json --noEmit && tsc -p apps/mobile/tsconfig.json --noEmit",
-    "build:web": "npm run build -w @unmasked/mobile && node scripts/pwa.mjs",
+    "build:web": "node scripts/build-web.mjs",
     "db:migrate": "tsx --env-file=.env apps/api/src/migrate.ts",
     "seed": "tsx --env-file=.env apps/api/src/seed.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "node scripts/serve-web.mjs",
     "worker": "tsx --env-file=.env apps/api/src/worker.ts",
-    "branding": "node scripts/branding.mjs"
+    "branding": "node scripts/branding.mjs",
+    "licenses": "node scripts/licenses.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "@types/pg": "^8.15.0",
     "@types/nodemailer": "^7.0.0",
-    "@types/react": "~19.2.0",
+    "@types/pg": "^8.15.0",
+    "@types/react": "~19.3.0",
     "concurrently": "^9.2.0",
-    "tsx": "^4.20.0",
-    "typescript": "~5.9.2",
     "eslint": "^9.39.0",
-    "typescript-eslint": "^8.46.0",
     "prettier": "^3.6.0",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "tsx": "^4.20.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.46.0"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Unmasked",
+    "slug": "unmasked",
+    "scheme": "unmasked",
+    "version": "0.1.0",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "icon": "./public/icon-1024.png",
+    "ios": {
+      "bundleIdentifier": "org.openrecode.unmasked",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "org.openrecode.unmasked",
+      "adaptiveIcon": {
+        "foregroundImage": "./public/adaptive-foreground.png",
+        "backgroundColor": "#6269F5",
+        "monochromeImage": "./public/monochrome.png"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./public/icon-192.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "e2ee": false,
+      "channel": "development"
+    }
+  }
+}

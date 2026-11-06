@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+allprojects { project ->
+    project.afterEvaluate {
+        if (project.plugins.hasPlugin('com.android.application')) {
+            def android = project.extensions.getByName('android')
+            def keyPath = System.getenv('UNMASKED_KEYSTORE')
+            if (!keyPath) throw new GradleException('Release signing configuration is required')
+            def signing = android.signingConfigs.create('unmaskedDistribution') {
+                storeFile new File(keyPath)
+                storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            }
+            android.buildTypes.getByName('release').signingConfig = signing
+        }
+    }
+}
