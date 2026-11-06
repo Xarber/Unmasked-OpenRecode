@@ -42,6 +42,7 @@ Executed locally on macOS with Node 24.14.0, npm 11.9.0, Expo 58.0.23, React 19.
 - Refresh originally invalidated another tab's access token. Introduced session-associated independently expiring access tokens and Web Locks for cross-tab cookie rotation where available.
 - Corrected cursor precision, exhausted-pagination UI state, reply-idempotency comparison, minor/group contact constraints and all-pair block checks.
 - Split conversation options and message rendering into reusable components. Guarded stale auth requests/outbox callbacks around sign-out. Read-cache cleanup now preserves drafts/outbox.
+- Root launch commands now propagate the root environment to Expo; web exports load only public entries and preserve externally configured values.
 - Native browser confirmation obstructed the automation check. Replaced it with visible in-app reload confirmation and activation acknowledgment; that path was verified.
 
 ## Remaining verification and release gates

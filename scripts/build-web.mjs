@@ -1,5 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { spawnSync, execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { parseEnv } from 'node:util';
+try {
+  const values = parseEnv(readFileSync(new URL('../.env', import.meta.url), 'utf8'));
+  for (const [key, value] of Object.entries(values))
+    if (key.startsWith('EXPO_PUBLIC_') && process.env[key] === undefined) process.env[key] = value;
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
+
 let commit = process.env.EXPO_PUBLIC_BUILD_COMMIT;
 if (!commit) {
   try {

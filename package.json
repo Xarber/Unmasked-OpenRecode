@@ -8,10 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -k -n api,app 'npm run dev -w @unmasked/api' 'npm run web -w @unmasked/mobile'",
+    "dev": "node scripts/run.mjs dev",
     "dev:api": "npm run dev -w @unmasked/api",
-    "web": "npm run web -w @unmasked/mobile",
-    "mobile": "npm run start -w @unmasked/mobile",
+    "web": "node scripts/run.mjs web",
+    "mobile": "node scripts/run.mjs mobile",
     "test": "tsx --test apps/api/tests/*.test.ts packages/contracts/src/*.test.ts",
     "typecheck": "tsc -p apps/api/tsconfig.json --noEmit && tsc -p apps/mobile/tsconfig.json --noEmit",
     "build:web": "node scripts/build-web.mjs",
@@ -22,7 +22,8 @@
     "preview": "node scripts/serve-web.mjs",
     "worker": "tsx --env-file=.env apps/api/src/worker.ts",
     "branding": "node scripts/branding.mjs",
-    "licenses": "node scripts/licenses.mjs"
+    "licenses": "node scripts/licenses.mjs",
+    "dev:services": "concurrently -k -n api,app 'npm run dev -w @unmasked/api' 'npm run web -w @unmasked/mobile'"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
