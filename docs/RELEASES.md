@@ -1,0 +1,13 @@
+# Build and release policy
+
+Private repository: Xarber/Unmasked-OpenRecode. Public source publication, public artifact destinations, external stores and alternative sources have not been authorized. AGPL-3.0-only source preparation does not change repository visibility.
+
+Promotion: feature/worktree → testing → beta → main. main/beta start from the repository bootstrap, not the unvalidated application. testing receives implementation commits. No push-triggered full build or release on testing. Checks are manual or pull-request triggered; native matrix is manual or runs on beta/main. No workflow publishes a release in this initial delivery.
+
+Native matrix has four independent jobs, fail-fast disabled: macOS unsigned device IPA, macOS simulator .app.zip, Linux signed universal release APK, Linux signed AAB. API_ORIGIN must be configured as a repository variable with the HTTPS API origin. Android requires the existing signing identity in ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD. Missing signing secrets fail explicitly; never substitute a generated debug key. No signing credentials were created or changed.
+
+Generated projects come from the same commit and SDK lockfile. Version 0.1.0, branch/channel and commit appear in filenames, and checksum/commit files accompany successful artifacts. The current workflow is a build scaffold, not a validated publication pipeline: architecture coverage, expected signing fingerprint, package IDs/versions, signature verification, complete four-artifact release validation and structured update-manifest generation must be added/verified before publication. Android uses the installed Expo/RN Gradle defaults; actual ABI coverage requires inspecting real built packages. Do not claim all four ABIs without that evidence.
+
+The IPA is unsigned and requires external signing before ordinary-device installation. Simulator app is not an IPA. AAB is not directly installable. Native workflow has not been executed locally, and remote execution requires API/signing configuration. No native build success is implied by web export or native JS bundling.
+
+Future release coordinator must require all mandatory jobs, verify package formats/IDs/version/architecture/signatures/checksums/commit, generate structured user/developer changelogs, and publish only to explicitly authorized channels. Automatic update checks and Android PackageInstaller integration remain unimplemented; do not expose an insecure private GitHub credential in clients. No sources-v1.0 metadata release or external store source is activated.

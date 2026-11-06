@@ -1,0 +1,9 @@
+# Developer Ideas
+
+Unlock Settings → version by three taps. Access expires after 30s of inactivity, backgrounding or a different main tab. Browser keyboard/pointer activity refreshes the timer; native touch activity does too. Deep-link access is gated; this is a diagnostics affordance, not a security boundary for privileged server actions.
+
+Ideas remain in separate local storage (`unmasked:ideas`), survive ordinary restarts/updates and are not sent to the API or any AI service. They are developer notes, independent of the signed-in account. The repository starts with an empty docs/IDEAS.json; no device collection has been automatically retrieved.
+
+Each Idea has stable UUID, title/description, category, priority, status, ISO creation/update times, status history and optional implementation reference. The version-1 export envelope identifies org.openrecode.unmasked and the export timestamp. Contracts are in packages/contracts. Import validates the whole collection, shows incoming entries/duplicate counts, preserves existing records by default and offers an explicit newer-conflict merge. Repeated IDs collapse safely. Unsupported versions/project IDs fail without modifying storage. JSON paste import is implemented across platforms; native file picker import and batch-selection operations remain on the roadmap. Export uses native sharing or a web download; Markdown and per-item export are available.
+
+When an agent receives an exported file in docs/IDEAS.json, it must count Pending/Approved/Deferred, inspect relevant entries against current functionality, ask now or another time without unrelated scope expansion, preserve unselected notes, and mark Implemented only after appropriate verification. Implementation references should include commit/version/changelog IDs; fully automatic changelog linking and synchronization are not implemented yet. Status history survives editing and merges; there is no built-in remote history service.

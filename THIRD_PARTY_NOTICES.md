@@ -1,0 +1,11 @@
+# Third-party notices
+
+Original Unmasked application/server source and original branding: AGPL-3.0-only, © 2026 OpenRecode contributors. Full text in LICENSE. Third-party projects retain their own licenses and copyright notices; AGPL does not replace those licenses.
+
+Direct runtime dependencies include Expo/Expo Router and React Native (MIT), React/React DOM (MIT), Fastify/plugins (MIT), Socket.IO client/server (MIT), node-postgres (MIT), Zod (MIT), TanStack Query (MIT), AsyncStorage (MIT), Nodemailer (MIT) and PGlite (Apache-2.0, PostgreSQL/WASM related notices supplied by that package). See installed distributions for full original notices. Ionicons are distributed by @expo/vector-icons with upstream attribution and license files; no third-party branding is copied.
+
+Sharp is an Apache-2.0 development/build tool. Its bundled native libraries include LGPL-3.0-or-later components (libvips) with their own source/relinking obligations. Sharp is used to generate original raster assets; it is not shipped inside the Expo client. Inventory includes MIT, BSD, ISC, Apache, MPL and other declared licenses. Some dependencies have alternative or multiple licenses; preserve component notices and select compatible alternatives where needed. CC-BY assets/data require their attribution. Do not infer legal certification from this initial inventory.
+
+[Dependency license inventory](docs/reports/dependency-licenses.json) is generated from package-lock.json and installed package metadata by `node scripts/licenses.mjs`. It is a declaration inventory, not a legal compatibility audit of every transitive/native artifact. Inspect and bundle full required license/NOTICE files when distributing built packages. In particular, PostgreSQL, Android/iOS native dependencies and toolchain-provided components require artifact-level review before a public release. No public binary distribution is performed by this delivery.
+
+Caniuse-lite browser-compatibility data is CC-BY-4.0, derived from Can I Use (https://caniuse.com/) and the caniuse-lite project (https://github.com/browserslist/caniuse-lite). It is used by build tooling and retains its upstream license/attribution; it is not original Unmasked data.

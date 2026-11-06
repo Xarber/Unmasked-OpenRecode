@@ -1,0 +1,9 @@
+# Synchronization and offline behavior
+
+PostgreSQL is the source of truth for shared messages, contacts, privacy and sessions. Socket.IO sends user-scoped invalidations; clients reconcile via authorized HTTP queries. Every device receives the same stable message IDs and server timestamps. Access tokens belong to an independently revocable session; refreshing a browser tab does not invalidate other unexpired access tokens in that session.
+
+Device-local drafts and outbox use separate account namespaces and are persisted before sending. Retry uses the same UUID/body/reply, so a lost HTTP acknowledgment does not duplicate a message. The client retries after network recovery and on a throttled 20-second connectivity recovery timer. Missing socket events do not destroy persisted history. A recent 50-message cache and conversation summaries are available offline; older history requires explicit pagination while online. This is not a complete offline replica or encrypted backup.
+
+Offline web reload uses a service-worker-cached public shell, then a previously cached own-profile snapshot only when the network fails. Backend authorization is still mandatory for every server operation. Local signed-out state prevents automatic cookie reauthentication after a failed offline logout. Confirmed authorization errors do not fall back to cached server responses. Sign-out removes private local account data; developer Ideas are a separate collection. Clearing just read cache preserves drafts/outbox.
+
+P2P is not implemented. The requested interoperable remote, asynchronous multi-device messenger currently uses its self-hosted server for durable delivery. A future P2P adapter must preserve existing contracts, authenticated discovery/pairing, revocation, encrypted transport, conflict handling and idempotency; background operation is platform-limited and must not be promised without testing. No contact or Ideas data is uploaded to an external coordination provider.
