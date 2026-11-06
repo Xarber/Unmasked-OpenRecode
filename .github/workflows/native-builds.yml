@@ -1,0 +1,116 @@
+name: Native build matrix
+on:
+  workflow_dispatch:
+  push:
+    branches: [beta, main]
+permissions:
+  contents: read
+concurrency:
+  group: unmasked-native-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  ios:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [unsigned-device, simulator]
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN }}
+      EXPO_PUBLIC_BUILD_COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Require configured API
+        run: test -n "$EXPO_PUBLIC_API_URL" && [[ "$EXPO_PUBLIC_API_URL" == https://* ]]
+      - run: npm ci
+      - name: Generate iOS project
+        working-directory: apps/mobile
+        run: npx expo prebuild --platform ios --non-interactive
+      - name: Compile unsigned device app
+        if: matrix.variant == 'unsigned-device'
+        working-directory: apps/mobile
+        run: |
+          xcodebuild -workspace ios/Unmasked.xcworkspace -scheme Unmasked -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/Unmasked.app Payload/
+          mkdir -p ../../artifacts
+          ditto -c -k --keepParent Payload ../../artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-ios-unsigned.ipa
+      - name: Compile simulator app
+        if: matrix.variant == 'simulator'
+        working-directory: apps/mobile
+        run: |
+          xcodebuild -workspace ios/Unmasked.xcworkspace -scheme Unmasked -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO build
+          mkdir -p ../../artifacts
+          ditto -c -k --keepParent build/Build/Products/Release-iphonesimulator/Unmasked.app ../../artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-ios-simulator.app.zip
+      - name: Record checksums and binary architecture
+        run: |
+          shasum -a 256 artifacts/* > artifacts/SHA256SUMS.txt
+          find apps/mobile/build/Build/Products -name Unmasked -type f -exec file {} \; > artifacts/architectures.txt
+          printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Unmasked-ios-${{ matrix.variant }}-${{ github.ref_name }}-${{ github.sha }}
+          path: artifacts/
+  android:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: universal-apk
+            task: assembleRelease
+            source: apk/release/app-release.apk
+            extension: apk
+          - variant: app-bundle
+            task: bundleRelease
+            source: bundle/release/app-release.aab
+            extension: aab
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN }}
+      EXPO_PUBLIC_BUILD_COMMIT: ${{ github.sha }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Require API and persistent release signing identity
+        run: |
+          test -n "$EXPO_PUBLIC_API_URL" && [[ "$EXPO_PUBLIC_API_URL" == https://* ]]
+          test -n "$ANDROID_KEYSTORE_BASE64" && test -n "$ANDROID_KEYSTORE_PASSWORD" && test -n "$ANDROID_KEY_ALIAS" && test -n "$ANDROID_KEY_PASSWORD"
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/unmasked.keystore"
+          echo "UNMASKED_KEYSTORE=$RUNNER_TEMP/unmasked.keystore" >> "$GITHUB_ENV"
+      - run: npm ci
+      - name: Generate Android project
+        working-directory: apps/mobile
+        run: npx expo prebuild --platform android --non-interactive
+      - name: Build signed release
+        working-directory: apps/mobile/android
+        run: ./gradlew ${{ matrix.task }} --no-daemon --init-script ../../../scripts/android-signing.gradle
+      - name: Collect artifact and checksums
+        run: |
+          mkdir -p artifacts
+          cp apps/mobile/android/app/build/outputs/${{ matrix.source }} artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-android-${{ matrix.variant }}.${{ matrix.extension }}
+          sha256sum artifacts/* > artifacts/SHA256SUMS.txt
+          printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Unmasked-android-${{ matrix.variant }}-${{ github.ref_name }}-${{ github.sha }}
+          path: artifacts/
+# Deliberately no release publication. Full package validation and publication authorization are required first.

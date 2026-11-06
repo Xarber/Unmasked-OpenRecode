@@ -1,0 +1,93 @@
+name: unmasked
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: unmasked
+      POSTGRES_DB: unmasked
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a strong POSTGRES_PASSWORD in .env}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U unmasked]
+      interval: 10s
+      retries: 10
+    mem_limit: 512m
+    restart: unless-stopped
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://unmasked:${POSTGRES_PASSWORD}@postgres:5432/unmasked
+      WEB_ORIGIN: ${WEB_ORIGIN:?Set HTTPS WEB_ORIGIN}
+      SMTP_URL: ${SMTP_URL:?Set SMTP_URL}
+      MAIL_FROM: ${MAIL_FROM}
+      BUILD_COMMIT: ${BUILD_COMMIT:-development}
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports: [127.0.0.1:3001:3001]
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      start_period: 30s
+      retries: 5
+    mem_limit: 512m
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+  worker:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    command: [node, --import, tsx, apps/api/src/worker.ts]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://unmasked:${POSTGRES_PASSWORD}@postgres:5432/unmasked
+      WEB_ORIGIN: ${WEB_ORIGIN}
+      SMTP_URL: ${SMTP_URL}
+    depends_on:
+      api: { condition: service_healthy }
+    mem_limit: 256m
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+  web:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.web
+      args:
+        EXPO_PUBLIC_API_URL: ${EXPO_PUBLIC_API_URL:?Set HTTPS API origin}
+    ports: [127.0.0.1:8080:8080]
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:8080/]
+      interval: 15s
+      retries: 5
+    mem_limit: 128m
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    profiles: [future-media]
+    command: [redis-server, --appendonly, 'yes']
+    volumes: [redis_data:/data]
+    mem_limit: 128m
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    profiles: [future-media]
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-unmasked}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+    volumes: [media_data:/data]
+    mem_limit: 512m
+volumes:
+  postgres_data:
+  redis_data:
+  media_data:
