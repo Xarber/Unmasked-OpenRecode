@@ -58,3 +58,12 @@ Actual Android/iOS/desktop PWA installation interfaces, browser push, hardware k
 Private repository: Xarber/Unmasked-OpenRecode. Work is on testing; beta/main retain the bootstrap until promotion is justified. Commits are unsigned because the configured hardware-backed signing key was unavailable; no signing identity or global Git setting was changed. No temporary feature branches/worktrees were created, so none require cleanup.
 
 Remote CI status is recorded below only after actual submission/observation. Local results above do not imply a remote run, native build or deployment succeeded.
+
+### Final local and remote handoff
+
+- Root `npm run dev` was executed after the environment launcher correction: API health and Expo Web both returned HTTP 200. Owned API/Expo preview processes were then stopped; ports 3001/8081 are no longer serving this task.
+- Final production web export at source commit `eaec853` succeeded, with public environment loading and the exact build commit embedded. Generated service-worker JavaScript passed `node --check`.
+- GitHub Actions YAML passed actionlint 1.7.12 validation with ShellCheck disabled. The temporary official actionlint binary was checksum-verified; no SDK or global toolchain was installed. This validates workflow definitions, not native packages.
+- Manual Linux Checks submitted for `eaec85384ae68b5d73cd4f62bb234a436d0e0eac` via [run 42269836284](https://github.com/Xarber/Unmasked-OpenRecode/actions/runs/42269836284). The commit identifier in the run must be used as authoritative provenance; the short local identifier is `eaec853`. Last observed status: **in progress**, at dependency installation. No remote success is claimed. The previous baseline run is [42269629023](https://github.com/Xarber/Unmasked-OpenRecode/actions/runs/42269629023).
+- Dependabot opened dependency/action update PRs after repository setup. They remain independent, unmerged proposals; their individual success/failure is not a check of the exact testing head. Active Dependabot branches/PRs were preserved.
+- `testing`, `beta` and `main` were pushed to the private repository. testing is the default branch and contains implementation; beta/main retain bootstrap commit `664192d`. No temporary task worktree or feature branch needs removal. No public release/deployment occurred.
