@@ -26,3 +26,9 @@ Client credentials are in memory (access), native SecureStore (refresh) or web H
 Single API process for realtime fan-out; Redis adapter and distributed rate limiting are required before scaling horizontally. Redis/MinIO optional Compose services are preparation, not active message/media dependencies. No E2EE, attachments, push, passkeys, provider login, P2P transport or automatic native updates are implemented. Server-side history is required for cross-device sync. No proprietary backend dependency.
 
 ConversationOptions and MessageBubble separate group/consent controls and per-message rendering/actions from the timeline route. PostgreSQL cursors carry the server timestamp with full microsecond precision, avoiding JavaScript Date truncation at page boundaries.
+
+## Web entry and platform presentation
+
+The generated Expo Web HTML template embeds the product landing at the root. Its early browser controller remembers explicit entry, keeps Expo mounted under the landing, and records same-document history entries for returning. The root landing does not intercept direct nested paths. Expo renders Auth or the active authenticated route when the overlay is dismissed. No account state is stored by the landing controller.
+
+Shared React Native controls use one Reduced Motion subscription with Reanimated press and disclosure transitions. Apple navigation surfaces use Liquid Glass when the installed platform supports it and Reduce Transparency is off. Other environments use the opaque surface. The native brand does not acquire a web navigation action.

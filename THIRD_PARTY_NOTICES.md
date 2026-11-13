@@ -9,3 +9,5 @@ Sharp is an Apache-2.0 development/build tool. Its bundled native libraries incl
 [Dependency license inventory](docs/reports/dependency-licenses.json) is generated from package-lock.json and installed package metadata by `node scripts/licenses.mjs`. It is a declaration inventory, not a legal compatibility audit of every transitive/native artifact. Inspect and bundle full required license/NOTICE files when distributing built packages. In particular, PostgreSQL, Android/iOS native dependencies and toolchain-provided components require artifact-level review before a public release. No public binary distribution is performed by this delivery.
 
 Caniuse-lite browser-compatibility data is CC-BY-4.0, derived from Can I Use (https://caniuse.com/) and the caniuse-lite project (https://github.com/browserslist/caniuse-lite). It is used by build tooling and retains its upstream license/attribution; it is not original Unmasked data.
+
+The original Expo starter repository history retains its [MIT license](LICENSES/expo-starter-MIT.txt) and original copyright.

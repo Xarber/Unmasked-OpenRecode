@@ -6,7 +6,7 @@ import { useApp } from '../src/provider';
 import { ideaStore, uuid } from '../src/storage';
 import { exportText } from '../src/export';
 import { API } from '../src/api';
-import { Shell, Card, Label, Field, Button } from '../src/ui';
+import { Shell, Card, Label, Field, Button, SectionHeading } from '../src/ui';
 export default function Developer() {
   const app = useApp(),
     [ideas, setIdeas] = useState<Idea[]>([]),
@@ -74,7 +74,7 @@ export default function Developer() {
     >
       {error !== '' && <Label style={{ color: '#C74359' }}>{error}</Label>}
       <Card>
-        <Label style={{ fontWeight: '600' }}>Diagnostics</Label>
+        <SectionHeading title="Diagnostics" icon="pulse-outline" />
         <Label>Version 0.1.0 · {process.env.EXPO_PUBLIC_BUILD_COMMIT ?? 'development'}</Label>
         <Label>API: {API}</Label>
         <Label>
@@ -87,7 +87,7 @@ export default function Developer() {
         </Label>
       </Card>
       <Card>
-        <Label style={{ fontSize: 20, fontWeight: '600' }}>Ideas</Label>
+        <SectionHeading title="Ideas" icon="bulb-outline" />
         <Label muted>
           {ideas.filter((i) => i.status === 'Pending').length} pending ·{' '}
           {ideas.filter((i) => i.status === 'Approved').length} approved ·{' '}

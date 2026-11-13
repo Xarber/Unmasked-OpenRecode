@@ -8,7 +8,17 @@ import { api } from '../src/api';
 import { useApp } from '../src/provider';
 import { clearReadCache } from '../src/storage';
 import { exportText } from '../src/export';
-import { Shell, Card, Label, Field, Button, Icon, accent } from '../src/ui';
+import {
+  Shell,
+  Card,
+  Label,
+  Field,
+  Button,
+  Icon,
+  SectionHeading,
+  InfoDisclosure,
+  accent,
+} from '../src/ui';
 interface Device {
   id: string;
   device: string;
@@ -54,7 +64,7 @@ export default function Settings() {
   return (
     <Shell title="Settings" subtitle="Make this space feel like yours." scroll>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Your profile</Label>
+        <SectionHeading title="Your profile" icon="person-circle-outline" />
         <Field label="Display name" value={name} onChangeText={setName} />
         <Field label="Username" value={handle} onChangeText={setHandle} autoCapitalize="none" />
         <Field
@@ -84,7 +94,7 @@ export default function Settings() {
         />
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Appearance</Label>
+        <SectionHeading title="Appearance" icon="color-palette-outline" />
         <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
           {['light', 'dark', 'system'].map((theme) => (
             <Button
@@ -96,11 +106,11 @@ export default function Settings() {
           ))}
         </View>
         <Label muted>
-          Text follows your device’s text-size settings. The interface uses no required motion.
+          Text follows your device settings. Reduced Motion keeps feedback gentle.
         </Label>
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Privacy, by choice</Label>
+        <SectionHeading title="Privacy, by choice" icon="shield-checkmark-outline" />
         <Label muted>
           Conversations in this version are stored on your server and are not end-to-end encrypted.
           Use a server operator you trust.
@@ -141,7 +151,7 @@ export default function Settings() {
         </Label>
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Connected devices</Label>
+        <SectionHeading title="Connected devices" icon="phone-portrait-outline" />
         {q.isError ? (
           <Button title="Retry device list" secondary onPress={() => void q.refetch()} />
         ) : (
@@ -170,7 +180,7 @@ export default function Settings() {
         )}
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Your data</Label>
+        <SectionHeading title="Your data" icon="folder-open-outline" />
         <Label muted>
           Exports contain private conversations. Keep the downloaded file somewhere safe. Clearing
           the local cache keeps drafts and queued messages. Signing out removes them from this
@@ -231,7 +241,7 @@ export default function Settings() {
         )}
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>Updates & changelog</Label>
+        <SectionHeading title="Updates & changelog" icon="refresh-circle-outline" />
         <Label>0.1.0 · Development channel</Label>
         <Label muted>
           This is an unreleased development build. No native update channel or installation package
@@ -276,12 +286,18 @@ export default function Settings() {
         )}
       </Card>
       <Card>
-        <Label style={{ fontSize: 19, fontWeight: '600' }}>About Unmasked</Label>
+        <SectionHeading title="About Unmasked" icon="information-circle-outline" />
         <Label>Be real. No covers.</Label>
         <Label muted>
           An OpenRecode project. No ads, paid visibility, streaks or subscription gates.
         </Label>
         <Label>AGPL-3.0-only · Third-party licenses are documented in the repository.</Label>
+        <InfoDisclosure title="How your profile sharing works">
+          <Label muted>
+            Your name and handle identify you to accepted contacts. Your bio and check-in are
+            disclosed only after mutual Unmasked consent and your independent sharing action.
+          </Label>
+        </InfoDisclosure>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Application version. Tap three times for developer options."

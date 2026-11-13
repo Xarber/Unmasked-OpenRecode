@@ -12,3 +12,9 @@ apps/mobile/ios/
 artifacts/
 
 **/native-js-export/
+
+# Generated from the landing template, branding and licenses
+apps/mobile/public/index.html
+apps/mobile/public/about/icon.svg
+apps/mobile/public/about/conversation.png
+apps/mobile/public/about/*.txt

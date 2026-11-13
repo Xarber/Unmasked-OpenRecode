@@ -8,6 +8,10 @@ RUN npm ci --ignore-scripts
 COPY apps/mobile apps/mobile
 COPY packages/contracts packages/contracts
 COPY scripts scripts
+COPY assets/branding/icon-master.svg assets/branding/icon-master.svg
+COPY docs/reports/unmasked-chat-desktop.png docs/reports/unmasked-chat-desktop.png
+COPY LICENSE THIRD_PARTY_NOTICES.md ./
+COPY LICENSES LICENSES
 COPY tsconfig.base.json .
 ARG EXPO_PUBLIC_API_URL
 ENV EXPO_PUBLIC_API_URL=$EXPO_PUBLIC_API_URL

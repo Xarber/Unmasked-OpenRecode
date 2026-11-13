@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import React from 'react';
+import React, { useState } from 'react';
+import Animated from 'react-native-reanimated';
+import { motion, useReducedMotionPreference, MotionPanel } from './motion';
+import { MaterialSurface } from './components/MaterialSurface';
 import {
   Text,
   View,
@@ -15,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from './provider';
+import { openWelcome } from './webWelcome';
 export const accent = '#6269F5';
 export function useColors() {
   return useApp().dark
@@ -26,15 +30,17 @@ export function useColors() {
         line: '#303140',
         soft: '#282A41',
         accent,
+        action: '#535BD6',
       }
     : {
         bg: '#F7F7FC',
         panel: '#FFFFFF',
         text: '#222337',
-        muted: '#727487',
+        muted: '#65677A',
         line: '#E9E9F2',
         soft: '#EEEEFE',
         accent,
+        action: '#535BD6',
       };
 }
 export function Label({
@@ -80,33 +86,55 @@ export function Button({
   icon?: React.ComponentProps<typeof Ionicons>['name'];
   danger?: boolean;
 }) {
-  const c = useColors();
+  const c = useColors(),
+    reduced = useReducedMotionPreference(),
+    [pressed, setPressed] = useState(false);
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={title}
+      accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => ({
-        backgroundColor: secondary ? c.soft : danger ? '#C74359' : accent,
-        minHeight: 46,
-        paddingHorizontal: 18,
-        paddingVertical: 11,
-        borderRadius: 14,
-        flexDirection: 'row',
-        gap: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: disabled ? 0.5 : pressed ? 0.75 : 1,
-      })}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      pressRetentionOffset={16}
+      style={{ minHeight: 48, borderRadius: 14 }}
     >
-      {icon && <Icon name={icon} size={18} color={secondary ? accent : '#FFF'} />}
-      <Text style={{ color: secondary ? c.text : '#FFF', fontWeight: '600', fontSize: 14 }}>
-        {title}
-      </Text>
+      <Animated.View
+        style={{
+          backgroundColor: disabled ? c.bg : secondary ? c.soft : danger ? '#B82B45' : c.action,
+          minHeight: 48,
+          paddingHorizontal: 18,
+          paddingVertical: 12,
+          borderRadius: 14,
+          flexDirection: 'row',
+          gap: 8,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: disabled ? 1 : 0,
+          borderColor: c.line,
+          transform: [{ scale: pressed && !reduced ? 0.97 : 1 }],
+          transitionProperty: reduced ? 'none' : 'transform',
+          transitionDuration: motion.press,
+          transitionTimingFunction: motion.easeOut,
+        }}
+      >
+        {icon && <Icon name={icon} size={18} color={secondary ? accent : '#FFF'} />}
+        <Text
+          style={{
+            color: disabled ? c.muted : secondary ? c.text : '#FFF',
+            fontWeight: '600',
+            fontSize: 14,
+          }}
+        >
+          {title}
+        </Text>
+      </Animated.View>
     </Pressable>
   );
 }
+
 export function Field({ label, ...props }: TextInputProps & { label?: string }) {
   const c = useColors();
   return (
@@ -154,6 +182,46 @@ export function Card({ children, style }: { children: React.ReactNode; style?: V
     </View>
   );
 }
+export function SectionHeading({
+  title,
+  icon,
+}: {
+  title: string;
+  icon: React.ComponentProps<typeof Ionicons>['name'];
+}) {
+  return (
+    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+      <Icon name={icon} color={accent} />
+      <Label style={{ fontSize: 19, fontWeight: '600', flexShrink: 1 }}>{title}</Label>
+    </View>
+  );
+}
+export function InfoDisclosure({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false),
+    c = useColors();
+  return (
+    <View style={{ gap: 10 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ expanded: open }}
+        onPress={() => setOpen(!open)}
+        style={{ minHeight: 48, flexDirection: 'row', gap: 10, alignItems: 'center' }}
+      >
+        <Icon name="information-circle-outline" />
+        <Label muted style={{ flex: 1, fontSize: 13 }}>
+          {title}
+        </Label>
+        <Icon name={open ? 'chevron-up' : 'chevron-down'} size={16} />
+      </Pressable>
+      {open && (
+        <MotionPanel style={{ padding: 16, borderRadius: 14, backgroundColor: c.bg, gap: 10 }}>
+          {children}
+        </MotionPanel>
+      )}
+    </View>
+  );
+}
 export function Avatar({ name, size = 46 }: { name: string; size?: number }) {
   const colors = ['#E8E5FF', '#DFEFED', '#F5E8E0', '#E3ECF8'];
   const i = name.charCodeAt(0) % colors.length;
@@ -172,7 +240,7 @@ export function Avatar({ name, size = 46 }: { name: string; size?: number }) {
         style={{
           fontSize: size * 0.36,
           fontWeight: '600',
-          color: ['#7160AD', '#3E8279', '#AF795F', '#6485AA'][i],
+          color: ['#5E478F', '#25675F', '#82513B', '#3D5B83'][i],
         }}
       >
         {name
@@ -297,7 +365,7 @@ export function Shell({
           </View>
         )}
         <View style={{ flex: 1, minWidth: 0 }}>
-          <View
+          <MaterialSurface
             style={{
               paddingHorizontal: wide ? 36 : 20,
               paddingVertical: 24,
@@ -314,7 +382,7 @@ export function Shell({
                 accessibilityRole="button"
                 accessibilityLabel="Back to conversations"
                 onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
-                style={{ padding: 8 }}
+                style={{ padding: 12, minWidth: 48, minHeight: 48 }}
               >
                 <Icon name="arrow-back" />
               </Pressable>
@@ -330,7 +398,8 @@ export function Shell({
               )}
             </View>
             {action}
-          </View>
+            {!wide && openWelcome && <Brand compact />}
+          </MaterialSurface>
           {!app.online && (
             <View style={{ padding: 10, backgroundColor: c.soft }}>
               <Label style={{ textAlign: 'center', fontSize: 12 }}>
@@ -339,12 +408,20 @@ export function Shell({
             </View>
           )}
           {app.notice !== '' && (
-            <Pressable
-              onPress={() => app.setNotice('')}
-              style={{ padding: 14, backgroundColor: c.soft }}
-            >
-              <Label style={{ fontSize: 13 }}>{app.notice} ×</Label>
-            </Pressable>
+            <MotionPanel>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Dismiss notification"
+                onPress={() => app.setNotice('')}
+                style={{ padding: 14, backgroundColor: c.soft }}
+              >
+                <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                  <Icon name="information-circle-outline" color={accent} />
+                  <Label style={{ fontSize: 13, flex: 1 }}>{app.notice}</Label>
+                  <Icon name="close" size={18} />
+                </View>
+              </Pressable>
+            </MotionPanel>
           )}
           {scroll ? (
             <ScrollView
@@ -362,7 +439,7 @@ export function Shell({
             children
           )}
           {!wide && !back && (
-            <View
+            <MaterialSurface
               style={{
                 flexDirection: 'row',
                 borderTopWidth: 1,
@@ -391,7 +468,7 @@ export function Shell({
                   </Label>
                 </Pressable>
               ))}
-            </View>
+            </MaterialSurface>
           )}
         </View>
       </View>
@@ -399,13 +476,13 @@ export function Shell({
   );
 }
 
-export function Brand() {
+export function Brand({ compact = false }: { compact?: boolean }) {
   const c = useColors();
-  return (
+  const mark = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
       <View
         style={{
-          backgroundColor: accent,
+          backgroundColor: c.action,
           width: 36,
           height: 36,
           borderRadius: 12,
@@ -415,9 +492,22 @@ export function Brand() {
       >
         <Text style={{ color: 'white', fontSize: 25, fontWeight: '700' }}>u</Text>
       </View>
-      <Text style={{ color: c.text, fontSize: 24, fontWeight: '700', letterSpacing: -1 }}>
-        unmasked<Text style={{ color: accent }}>.</Text>
-      </Text>
+      {!compact && (
+        <Text style={{ color: c.text, fontSize: 24, fontWeight: '700', letterSpacing: -1 }}>
+          unmasked<Text style={{ color: accent }}>.</Text>
+        </Text>
+      )}
     </View>
+  );
+  if (!openWelcome) return mark;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="About Unmasked"
+      onPress={openWelcome}
+      style={{ alignSelf: 'flex-start', minWidth: 48, minHeight: 48, justifyContent: 'center' }}
+    >
+      {mark}
+    </Pressable>
   );
 }

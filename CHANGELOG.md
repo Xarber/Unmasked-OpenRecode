@@ -14,7 +14,11 @@ All changes below are unreleased implementation work, not published application 
 - Responsive Expo interface, themes, local developer Ideas and public-shell PWA configuration.
 - PostgreSQL/PGlite migrations, self-hosting configuration, automated backend/contract tests and private CI/build scaffolding.
 
+- Web presentation on first visit with remembered entry, a return action that preserves drafts, and an installation guide.
+
 ### Fixes & Improvements
+
+- Improved contrast, accessible disclosures, and reduced-motion support in shared web and native controls.
 
 - Aligned Expo 58 module versions; removed high-severity advisories identified in the initial dependency set.
 - Separated access-token expiry from refresh rotation so existing tabs are not invalidated whenever another tab refreshes.

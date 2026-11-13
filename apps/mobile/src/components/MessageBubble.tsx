@@ -4,7 +4,7 @@ import { View, Pressable } from 'react-native';
 import type { Conversation, Message } from '@unmasked/contracts';
 import { api } from '../api';
 import { useApp } from '../provider';
-import { Label, Button, Field, Card, useColors, accent } from '../ui';
+import { Label, Button, Field, Card, useColors } from '../ui';
 interface Props {
   m: Message;
   previous?: Message;
@@ -56,7 +56,7 @@ export function MessageBubble({
             }
           }}
           style={{
-            backgroundColor: own ? accent : c.panel,
+            backgroundColor: own ? c.action : c.panel,
             borderRadius: 20,
             borderBottomRightRadius: own ? 5 : 20,
             borderBottomLeftRadius: own ? 20 : 5,

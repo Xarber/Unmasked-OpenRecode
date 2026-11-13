@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#6269F5" />
+    <title>Unmasked — setup, privacy & availability</title>
+    <link rel="stylesheet" href="/about/style.css" />
+    <link rel="icon" href="/about/icon.svg" />
+  </head>
+  <body class="product">
+    <header class="nav wrap">
+      <a class="brand" href="/?welcome=1"
+        ><img src="/about/icon.svg" alt="" width="36" height="36" />unmasked<span>.</span></a
+      ><a class="button secondary" href="/?open=1">Open the app</a>
+    </header>
+    <main class="guide wrap">
+      <p class="eyebrow">THE PRACTICAL DETAILS</p>
+      <h1>A place for the details.</h1>
+      <p>
+        This is an unreleased development version of Unmasked. These instructions describe the
+        implemented account and messaging slice; they do not certify the entire product
+        specification.
+      </p>
+      <section>
+        <h2>Use the web app</h2>
+        <p>
+          Open the application, create an account, verify the code sent by your server, and invite
+          someone you know from Connections. Accepted contacts can start a conversation. Private
+          invitations expire after 24 hours. An invitation alone does not grant messaging access.
+        </p>
+        <p>
+          For local development without SMTP, the loopback-only development mailbox contains
+          verification codes. Never expose that mailbox or development database publicly.
+        </p>
+      </section>
+      <section id="self-host">
+        <h2>Local setup & self-hosting</h2>
+        <p>
+          Source access is currently restricted. The owner is preparing to reconcile the existing
+          public repository’s original history with the private development history; new application
+          code is not being published there during this step.
+        </p>
+        <p>With an authorized checkout, use Node 24 and npm 11:</p>
+        <pre><code>npm ci
+cp .env.example .env
+npm run db:migrate
+npm run dev</code></pre>
+        <p>
+          Development starts the API on localhost:3001 and Expo Web on localhost:8081. Persistent
+          embedded PostgreSQL is development-only. X-Center is the default deployment
+          infrastructure. Production requires real PostgreSQL, SMTP and same-site HTTPS origins,
+          with isolated services, backups and tested rollback. Detailed procedures are in the
+          repository’s docs/DEPLOYMENT.md and docs/platforms/XCENTER.md.
+        </p>
+        <p>Generate the web application and its offline public shell:</p>
+        <pre><code>npm run build:web
+npm run preview</code></pre>
+        <p>
+          Docker self-hosting configuration is included. Before starting it, configure strong
+          private credentials and valid HTTPS/API/mail settings. Never use production credentials in
+          EXPO_PUBLIC_* variables.
+        </p>
+      </section>
+      <section id="native">
+        <h2>iOS & Android availability</h2>
+        <p>
+          A shared Expo/React Native client targets both platforms. No downloadable IPA, APK or AAB
+          is currently released. Native JavaScript export is not evidence of a successful device
+          build, installation or physical-device test.
+        </p>
+        <pre><code>npm run mobile
+# With existing authorized platform toolchains:
+cd apps/mobile
+npx expo prebuild --platform ios
+npx expo run:ios
+npx expo prebuild --platform android
+npx expo run:android</code></pre>
+        <p>
+          The prepared build matrix distinguishes an unsigned iOS device IPA, an iOS Simulator app,
+          a signed universal Android APK and an Android App Bundle. Unsigned IPAs require signing;
+          simulator apps are not device IPAs; AABs are not directly installable APKs. No store
+          submission or public release destination is activated.
+        </p>
+      </section>
+      <section id="privacy">
+        <h2>Privacy in plain language</h2>
+        <p>
+          <strong>This version does not implement end-to-end encryption.</strong> The server
+          operator can read stored message text. TLS protects transport when properly configured; it
+          is not E2EE. Use a trusted host, HTTPS and operator-managed storage/backup encryption
+          before sharing real personal content.
+        </p>
+        <p>
+          Profiles start undiscoverable. Real names and photos are optional. Personal invitations
+          enable private connections; under-18 accounts have restricted discovery and contact
+          requirements. Age is self-declared, not verified. Unmasked Mode requires mutual
+          acceptance; bio/status disclosures remain independently controlled and revocable.
+        </p>
+        <p>
+          Drafts, queued messages and recent history are stored locally without application-level
+          encryption. Native refresh credentials use SecureStore; web refresh credentials use
+          HttpOnly cookies. Signing out clears local account caches and pending drafts/outbox.
+          Clearing only the read cache preserves drafts and queued messages. Developer Ideas are
+          separate local notes and are not automatically sent to AI providers or synced to the
+          repository.
+        </p>
+        <p>
+          Account deletion removes active profile/session/contact records and redacts authored
+          message bodies, retaining tombstones in other participants’ shared history. Recipient
+          screenshots/exports and operator backups cannot be retracted automatically. Reports
+          contain only the content deliberately submitted by the reporter. Operator retention and
+          appeal procedures must be established before public onboarding.
+        </p>
+        <p>
+          No advertising or third-party analytics is included. This is not a claim of legal
+          certification or independently audited security.
+        </p>
+      </section>
+      <section>
+        <h2>What remains in development</h2>
+        <p>
+          Media/voice, push delivery, passkeys/provider login, full moderation/appeals, shared
+          bookmarks, audited E2EE, automatic native updates, full offline-history replication and
+          comprehensive physical-device validation are unfinished. Repository documentation records
+          actual test evidence and release limitations.
+        </p>
+      </section>
+      <section>
+        <h2>License & acknowledgments</h2>
+        <p>
+          Original Unmasked code and branding use <a href="/about/LICENSE.txt">AGPL-3.0-only</a>, ©
+          2026 OpenRecode contributors. Third-party components retain their own notices; see
+          <a href="/about/THIRD_PARTY_NOTICES.txt">third-party acknowledgments</a>. The original
+          Expo starter’s MIT license remains preserved with its history.
+        </p>
+      </section>
+      <p><a class="button secondary" href="/?welcome=1">Back to Unmasked</a></p>
+    </main>
+  </body>
+</html>

@@ -148,7 +148,8 @@ export function Provider({ children }: { children: React.ReactNode }) {
     async function restore() {
       try {
         setThemeState(await read('theme', 'system'));
-        if (!(await read('signedOut', false))) {
+        const preview = Platform.OS === 'web' && process.env.EXPO_PUBLIC_WEB_PREVIEW === '1';
+        if (!preview && !(await read('signedOut', false))) {
           try {
             const result = await refresh();
             setUser(result.profile);

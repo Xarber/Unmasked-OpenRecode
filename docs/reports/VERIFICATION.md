@@ -1,5 +1,7 @@
 # Verification report — 6 November 2026
 
+[Follow-up UADS and browser verification](UADS-36.md) covers the November 13 changes.
+
 ## Scope and environment
 
 New application foundation and working messaging slice, with selected groups, Unmasked consent, moments and developer tools. This is **not** completion or an audit of the entire product specification.

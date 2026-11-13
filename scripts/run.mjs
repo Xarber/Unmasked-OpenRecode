@@ -15,6 +15,7 @@ const commands = {
 const args = commands[process.argv[2]];
 if (!args) throw Error('Use dev, web or mobile');
 if (!process.env.npm_execpath) throw Error('Run this command through the root npm scripts');
+if (process.argv[2] !== 'mobile') await import('./landing.mjs');
 const child = spawn(process.execPath, [process.env.npm_execpath, ...args], {
   stdio: 'inherit',
   env: process.env,

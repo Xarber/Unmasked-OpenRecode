@@ -1,6 +1,6 @@
 # Unmasked identity
 
-Name and tagline supplied by the owner: **Unmasked — Be real. No covers.** Part of OpenRecode. No naming clearance or global trademark availability is claimed. An unrelated existing repository at Xarber/Unmasked is preserved; this project uses the private Unmasked-OpenRecode repository.
+Name and tagline supplied by the owner: **Unmasked — Be real. No covers.** Part of OpenRecode. No naming clearance or global trademark availability is claimed. The original starter history is preserved at Xarber/Unmasked. Active development uses the private Unmasked-OpenRecode repository.
 
 Accent #6269F5. Light background #F7F7FC, white surfaces, ink #222337, secondary #727487. Dark background #14151D, surface #1D1E29, text #F3F3FC, secondary #ABAEBF. Use the platform system sans-serif so dynamic text and native rendering remain familiar. Hierarchy uses restrained weights and generous spacing; no bundled proprietary fonts.
 

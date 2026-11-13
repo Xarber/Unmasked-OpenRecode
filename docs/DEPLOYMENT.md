@@ -1,6 +1,6 @@
 # Self-hosting and rollback
 
-No public deployment has been performed. Compose has been prepared but cannot be executed on the current workstation because Docker is unavailable. Do not interpret configuration as an operational deployment.
+See [X-Center preview](platforms/XCENTER.md) for the isolated web-only deployment. Public hosting and the full service are pending. Compose has been prepared but cannot be executed on the current workstation because Docker is unavailable. Do not interpret configuration as an operational deployment.
 
 ## Bring up an isolated stack
 

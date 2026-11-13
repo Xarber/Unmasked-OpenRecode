@@ -20,10 +20,15 @@ if (!commit) {
     commit = 'unversioned';
   }
 }
+const landing = spawnSync(process.execPath, ['scripts/landing.mjs'], { stdio: 'inherit' });
+if (landing.status !== 0) process.exit(landing.status ?? 1);
 const result = spawnSync('npm', ['run', 'build', '-w', '@unmasked/mobile'], {
   stdio: 'inherit',
   env: { ...process.env, EXPO_PUBLIC_BUILD_COMMIT: commit },
 });
 if (result.status !== 0) process.exit(result.status ?? 1);
-const pwa = spawnSync(process.execPath, ['scripts/pwa.mjs'], { stdio: 'inherit' });
+const pwa = spawnSync(process.execPath, ['scripts/pwa.mjs'], {
+  stdio: 'inherit',
+  env: { ...process.env, EXPO_PUBLIC_BUILD_COMMIT: commit },
+});
 process.exit(pwa.status ?? 1);

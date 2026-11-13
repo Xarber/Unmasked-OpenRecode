@@ -10,7 +10,7 @@ Read docs/IDEAS.json at the start of each substantial development session. Count
 
 Node 24, npm workspaces. `npm ci`, `cp .env.example .env`, `npm run dev`. PostgreSQL migrations shared by production PostgreSQL and embedded development PGlite. Never open two processes against the embedded database. `npm run typecheck`, `npm run lint`, `npm test`, `npm run build:web`. See docs/DEVELOPMENT.md for exact paths and native build commands.
 
-All original code AGPL-3.0-only. Work goes to testing, then beta, then main. Conventional Commits. testing has no automatic full builds/releases. Do not use the unrelated existing public Xarber/Unmasked repository. This checkout belongs to private Xarber/Unmasked-OpenRecode.
+All original code AGPL-3.0-only. Work goes to testing, then beta, then main. Conventional Commits. testing has no automatic full builds/releases. The owner confirmed public Xarber/Unmasked is the original project. Keep its history available through the fetch-only original-project remote. Current development uses private Xarber/Unmasked-OpenRecode. Public pushes and publication are outside the authorized scope.
 
 No public publication or external store submission is authorized. Do not embed private GitHub tokens. No E2EE is implemented. No message delivery acknowledgment exists: UI may say saved to server, never delivered. Socket events carry only invalidations. Every protected operation must verify the current database session and conversation membership. Keep device caches separate by user, and clear them on sign-out.
 
