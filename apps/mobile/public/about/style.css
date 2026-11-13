@@ -30,14 +30,14 @@
   background: var(--bg);
   color: var(--ink);
 }
-.product a {
+.product :where(a) {
   color: inherit;
   text-decoration: none;
 }
 .product a:hover {
   text-decoration: underline;
 }
-.product button {
+.product :where(button) {
   font: inherit;
 }
 .product button,
@@ -49,7 +49,7 @@
   outline: 3px solid var(--brand);
   outline-offset: 5px;
 }
-.product p {
+.product :where(p) {
   margin: 0 0 1rem;
 }
 .product h1,
