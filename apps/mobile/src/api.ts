@@ -3,7 +3,16 @@ import { withRefreshLock } from './refreshLock';
 import { Platform } from 'react-native';
 import { credentials } from './credentials';
 import type { Profile } from '@unmasked/contracts';
-export const API = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3001';
+import { hosted, hostedOrigin } from './distribution';
+export const API =
+  process.env.EXPO_PUBLIC_API_URL ??
+  (hosted ? (Platform.OS === 'web' ? '/api' : hostedOrigin + '/api') : 'http://localhost:3001');
+export const socketOrigin =
+  Platform.OS === 'web' && typeof window !== 'undefined'
+    ? new URL(API, window.location.origin).origin
+    : API.startsWith('/')
+      ? hostedOrigin
+      : new URL(API).origin;
 let access: string | null = null;
 let refreshPromise: Promise<AuthResult> | null = null;
 let onAuthLost = () => {};

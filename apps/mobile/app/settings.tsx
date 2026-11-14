@@ -1,5 +1,6 @@
 import { applyWebUpdate } from '../src/pwa';
 // SPDX-License-Identifier: AGPL-3.0-only
+import { developerTools } from '../src/distribution';
 import React, { useState, useRef } from 'react';
 import { View, Pressable, Switch, Platform } from 'react-native';
 import { router } from 'expo-router';
@@ -250,6 +251,7 @@ export default function Settings() {
         <Button
           title={changelog ? 'Hide release history' : 'View changelog'}
           secondary
+          icon="reader-outline"
           onPress={() => setChangelog(!changelog)}
         />
         {changelog && (
@@ -258,7 +260,7 @@ export default function Settings() {
             <Label>💬 Persistent conversations, contact invitations, replies and reactions.</Label>
             <Label>🎭 Optional Unmasked Mode with independent, revocable profile sharing.</Label>
             <Label>🔖 Private saved moments and account data exports.</Label>
-            <Label>🛠 Developer Ideas with portable JSON import and export.</Label>
+            {developerTools && <Label>Developer Ideas with portable JSON import and export.</Label>}
             <Label muted>
               Fixes & Improvements: see the repository test report for verified behavior and known
               limitations.
@@ -269,6 +271,7 @@ export default function Settings() {
           <>
             <Button
               title="Reload app shell"
+              icon="refresh-outline"
               secondary
               onPress={() => setReloadPending(!reloadPending)}
             />
@@ -298,27 +301,31 @@ export default function Settings() {
             disclosed only after mutual Unmasked consent and your independent sharing action.
           </Label>
         </InfoDisclosure>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Application version. Tap three times for developer options."
-          onPress={() => {
-            const now = Date.now();
-            taps.current = {
-              count: now - taps.current.at < 1500 ? taps.current.count + 1 : 1,
-              at: now,
-            };
-            if (taps.current.count === 3) {
-              app.unlock();
-              taps.current.count = 0;
-            }
-          }}
-          style={{ paddingVertical: 14 }}
-        >
-          <Label muted style={{ fontSize: 12 }}>
-            Version 0.1.0 · Commit {process.env.EXPO_PUBLIC_BUILD_COMMIT ?? 'development'}
-          </Label>
-        </Pressable>
-        {app.developer && (
+        {developerTools ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Application version. Tap three times for developer options."
+            onPress={() => {
+              const now = Date.now();
+              taps.current = {
+                count: now - taps.current.at < 1500 ? taps.current.count + 1 : 1,
+                at: now,
+              };
+              if (taps.current.count === 3) {
+                app.unlock();
+                taps.current.count = 0;
+              }
+            }}
+            style={{ paddingVertical: 14 }}
+          >
+            <Label muted style={{ fontSize: 12 }}>
+              Version 0.1.0 · Commit {process.env.EXPO_PUBLIC_BUILD_COMMIT ?? 'development'}
+            </Label>
+          </Pressable>
+        ) : (
+          <Label muted>Version 0.1.0</Label>
+        )}
+        {developerTools && app.developer && (
           <Button
             title="Developer options"
             secondary

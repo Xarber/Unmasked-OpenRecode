@@ -22,7 +22,7 @@ export async function createApp(db: Db, c: Config) {
         ? { redact: ['req.headers.authorization', 'req.headers.cookie', 'body'] }
         : false,
     bodyLimit: 32768,
-    trustProxy: false,
+    trustProxy: process.env.TRUST_XCENTER_PROXY === '1' ? (_address, hop) => hop === 0 : false,
   });
   await app.register(cors, { origin: c.WEB_ORIGIN, credentials: true });
   await app.register(cookie);

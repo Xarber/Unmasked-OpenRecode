@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import React from 'react';
+import { developerTools, hosted } from '../src/distribution';
 import { Stack, usePathname, router } from 'expo-router';
 import { View, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -37,7 +38,9 @@ function Gate() {
         <View style={{ alignSelf: 'center', width: '100%', maxWidth: 460, gap: 16 }}>
           <Brand />
           <Card>
-            <Label style={{ fontSize: 24, fontWeight: '700' }}>Private web preview</Label>
+            <Label style={{ fontSize: 24, fontWeight: '700' }}>
+              {hosted ? 'Unmasked preview' : 'Private web preview'}
+            </Label>
             <Label muted>Accounts and messaging are unavailable in this preview.</Label>
           </Card>
         </View>
@@ -65,7 +68,7 @@ function Gate() {
           }}
         >
           <Button
-            title="Developer access expired · Go to Settings"
+            title={developerTools ? 'Developer access expired · Go to Settings' : 'Go to Settings'}
             onPress={() => router.replace('/settings')}
           />
         </View>

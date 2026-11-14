@@ -19,3 +19,11 @@ Open http://localhost:18550/ while that session is active. Exact version, commit
 5. To roll back, repeat step 3 from the previous release directory and verify its live metadata. On an initial deployment, stop only the `unmasked-private-web` project if validation fails.
 
 The preview uses a read-only filesystem and has no database or persistent user content. No reverse-proxy changes are required.
+
+## Production configuration
+
+Use the checked-in X-Center override with the root Compose file. It binds dedicated API and web instances to loopback ports 18551 and 18552. PostgreSQL and the maintenance worker have no host port. The public virtual host uses the appliance's existing wildcard certificate and sends /api/ and /socket.io/ to the API.
+
+Set `WEB_ORIGIN=https://unmasked.xcenter.it`, `EXPO_PUBLIC_API_URL=/api`, and `BUILD_COMMIT` to the checked-out SHA. The override sets `EXPO_PUBLIC_DISTRIBUTION=xcenter` so end users see a basic version label. The native build's default is `https://unmasked.xcenter.it/api`. The app has no custom server input.
+
+Keep `POSTGRES_PASSWORD` and `SMTP_URL` in a restricted appliance environment file and set `MAIL_FROM=Unmasked <support@xcenter.it>`. Verify authenticated mail delivery before enabling signup. Validate Compose with `docker compose -f compose.yaml -f infra/xcenter/production.override.yaml config --quiet`. Apply only the Unmasked virtual host after local API and database readiness. Verify Nginx with `nginx -t` before reloading. Preserve the private preview and prior deployment while validating the public endpoint.

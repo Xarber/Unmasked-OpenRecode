@@ -17,7 +17,8 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
     env:
-      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN }}
+      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN || 'https://unmasked.xcenter.it/api' }}
+      EXPO_PUBLIC_DISTRIBUTION: xcenter
       EXPO_PUBLIC_BUILD_COMMIT: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +73,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN }}
+      EXPO_PUBLIC_API_URL: ${{ vars.API_ORIGIN || 'https://unmasked.xcenter.it/api' }}
+      EXPO_PUBLIC_DISTRIBUTION: xcenter
       EXPO_PUBLIC_BUILD_COMMIT: ${{ github.sha }}
       ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -90,10 +92,19 @@ jobs:
           java-version: 21
       - uses: android-actions/setup-android@v3
       - uses: gradle/actions/setup-gradle@v4
-      - name: Require API and persistent release signing identity
+      - name: Configure API and persistent release signing identity
         run: |
           test -n "$EXPO_PUBLIC_API_URL" && [[ "$EXPO_PUBLIC_API_URL" == https://* ]]
+          if [[ -z "$ANDROID_KEYSTORE_BASE64" && -z "$ANDROID_KEYSTORE_PASSWORD" && -z "$ANDROID_KEY_ALIAS" && -z "$ANDROID_KEY_PASSWORD" ]]; then
+            if [[ "$GITHUB_REF_NAME" == "beta" || "$GITHUB_REF_NAME" == "main" ]]; then
+              echo "::error::A persistent release key is required on release branches"
+              exit 1
+            fi
+            echo "ANDROID_BUILD_MODE=debug" >> "$GITHUB_ENV"
+            exit 0
+          fi
           test -n "$ANDROID_KEYSTORE_BASE64" && test -n "$ANDROID_KEYSTORE_PASSWORD" && test -n "$ANDROID_KEY_ALIAS" && test -n "$ANDROID_KEY_PASSWORD"
+          echo "ANDROID_BUILD_MODE=release" >> "$GITHUB_ENV"
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/unmasked.keystore"
           echo "UNMASKED_KEYSTORE=$RUNNER_TEMP/unmasked.keystore" >> "$GITHUB_ENV"
       - run: npm ci
@@ -101,16 +112,25 @@ jobs:
         working-directory: apps/mobile
         run: npx expo prebuild --platform android --non-interactive
       - name: Build signed release
+        if: env.ANDROID_BUILD_MODE == 'release'
         working-directory: apps/mobile/android
         run: ./gradlew ${{ matrix.task }} --no-daemon --init-script ../../../scripts/android-signing.gradle
+      - name: Compile Android debug smoke artifact
+        if: env.ANDROID_BUILD_MODE == 'debug'
+        working-directory: apps/mobile/android
+        env:
+          BUILD_TASK: ${{ matrix.task }}
+        run: ./gradlew "${BUILD_TASK%Release}Debug" --no-daemon
       - name: Collect artifact and checksums
         run: |
           mkdir -p artifacts
-          cp apps/mobile/android/app/build/outputs/${{ matrix.source }} artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-android-${{ matrix.variant }}.${{ matrix.extension }}
+          source='${{ matrix.source }}'
+          if [[ "$ANDROID_BUILD_MODE" == "debug" ]]; then source="${source//release/debug}"; fi
+          cp "apps/mobile/android/app/build/outputs/$source" "artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-android-${{ matrix.variant }}-$ANDROID_BUILD_MODE.${{ matrix.extension }}"
           sha256sum artifacts/* > artifacts/SHA256SUMS.txt
           printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: Unmasked-android-${{ matrix.variant }}-${{ github.ref_name }}-${{ github.sha }}
+          name: Unmasked-android-${{ matrix.variant }}-${{ env.ANDROID_BUILD_MODE }}-${{ github.ref_name }}-${{ github.sha }}
           path: artifacts/
 # Deliberately no release publication. Full package validation and publication authorization are required first.

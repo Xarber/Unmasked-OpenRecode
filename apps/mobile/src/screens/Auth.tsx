@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import { developerTools } from '../distribution';
 import React, { useState } from 'react';
 import { View, ScrollView, Text, Pressable, useWindowDimensions, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -301,7 +302,7 @@ export default function Auth() {
                 }}
               />
             )}
-            {__DEV__ && (
+            {__DEV__ && developerTools && (
               <Pressable onPress={() => void Linking.openURL(`${API}/dev/mailbox`)}>
                 <Label muted style={{ fontSize: 12 }}>
                   Local development · Open the development mailbox ↗

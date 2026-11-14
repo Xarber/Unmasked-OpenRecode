@@ -1,0 +1,11 @@
+services:
+  api:
+    ports: !override ['127.0.0.1:18551:3001']
+    environment:
+      TRUST_XCENTER_PROXY: '1'
+  web:
+    ports: !override ['127.0.0.1:18552:8080']
+    build:
+      args:
+        EXPO_PUBLIC_DISTRIBUTION: xcenter
+        EXPO_PUBLIC_BUILD_COMMIT: ${BUILD_COMMIT:?Set the deployed Git commit}

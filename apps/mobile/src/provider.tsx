@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import { developerTools } from './distribution';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { AppState, Platform, useColorScheme } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { io, type Socket } from 'socket.io-client';
 import type { Profile } from '@unmasked/contracts';
 import {
-  API,
+  socketOrigin,
   api,
   accessToken,
   refresh,
@@ -179,7 +180,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
     void updateQueue(user.id, (x) => x).then((items) => {
       if (!cancelled) setOutbox(items);
     });
-    const s = io(API, { auth: { token: accessToken() }, transports: ['websocket'] });
+    const s = io(socketOrigin, { auth: { token: accessToken() }, transports: ['websocket'] });
     socket.current = s;
     s.on('connect', () => {
       setOnline(true);
@@ -291,6 +292,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
           setNotice,
           developer,
           unlock: () => {
+            if (!developerTools) return;
             setDeveloper(true);
             touch();
           },
