@@ -1,6 +1,15 @@
 import tseslint from 'typescript-eslint';
 export default tseslint.config(
-  { ignores: ['**/node_modules/**', '**/dist/**', '**/.expo/**', '.data/**'] },
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.expo/**',
+      '.data/**',
+      'artifacts/**',
+      '**/native-js-export/**',
+    ],
+  },
   ...tseslint.configs.recommended,
   {
     rules: {
