@@ -1,0 +1,27 @@
+{
+  "versionSource": "apps/mobile/app.json",
+  "branches": {
+    "testing": "development",
+    "beta": "beta",
+    "main": "stable"
+  },
+  "publishNative": false,
+  "requiredArtifacts": [
+    "ios-unsigned",
+    "ios-simulator",
+    "android-universal-apk",
+    "android-app-bundle"
+  ],
+  "states": [
+    "Planned",
+    "Built",
+    "Validated",
+    "Published",
+    "Distributing",
+    "Verified",
+    "Partial",
+    "Failed",
+    "Rolled Back",
+    "Superseded"
+  ]
+}

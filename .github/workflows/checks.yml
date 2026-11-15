@@ -1,7 +1,11 @@
 name: Checks
 on:
   pull_request:
+    branches: [testing, beta, main]
   workflow_dispatch:
+concurrency:
+  group: unmasked-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -15,10 +19,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run uads:validate
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
       - run: npm run build:web
+      - run: npm run uads:validate -- --web
       - run: npm audit --omit=dev --audit-level=high
       - uses: actions/upload-artifact@v4
         with:

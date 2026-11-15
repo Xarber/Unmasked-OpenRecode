@@ -1,0 +1,168 @@
+{
+  "uadsVersion": "sections-1-50",
+  "manifestVersion": 1,
+  "project": {
+    "name": "Unmasked",
+    "repository": "Xarber/Unmasked-OpenRecode",
+    "profiles": ["mobile-app", "web-app", "backend-service"],
+    "framework": "Expo / React Native / Fastify",
+    "platforms": ["ios", "android", "web", "linux"],
+    "hosting": "X-Center"
+  },
+  "features": {
+    "landing": "implemented",
+    "pwa": "implemented",
+    "onboarding": "missing",
+    "screenshotRendering": "missing",
+    "sampleData": "development-fixtures",
+    "developerOptions": "development-only",
+    "ideas": "implemented",
+    "serverSwitcher": "missing"
+  },
+  "distribution": {
+    "web": "public-preview",
+    "githubReleases": "inactive",
+    "altSource": "inactive",
+    "obtainium": "inactive"
+  },
+  "quality": {
+    "workflow": ".github/workflows/checks.yml",
+    "performanceBudgets": "config/performance-budgets.json",
+    "releaseMetadata": "config/release-metadata.json"
+  },
+  "requirements": [
+    {
+      "id": "UADS-ARCH-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-ARCH-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-DOC-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-ARCH-003",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-GIT-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-CI-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-PLAT-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-DATA-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-ARCH-004",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-DEV-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-REL-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-UI-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-SEC-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-QA-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-OPS-001",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-DIST-001",
+      "applicability": "Conditional",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-PLAT-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-UI-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-UI-003",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-DEV-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-REL-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    },
+    {
+      "id": "UADS-QA-002",
+      "applicability": "Required",
+      "status": "Pending",
+      "evidence": []
+    }
+  ],
+  "exceptions": []
+}

@@ -15,3 +15,5 @@ All original code AGPL-3.0-only. Work goes to testing, then beta, then main. Con
 Native release publication and external store submission require separate authorization. Do not embed private GitHub tokens. No E2EE is implemented. No message delivery acknowledgment exists: UI may say saved to server, never delivered. Socket events carry only invalidations. Every protected operation must verify the current database session and conversation membership. Keep device caches separate by user, and clear them on sign-out.
 
 Keep modules split between app wiring, authentication, identity/connections, messaging, groups, product features, contracts and platform adapters. No plugin code execution. Portal/Echo hooks must be host-controlled and require explicit data-sharing consent. Update docs and the verification report for meaningful changes. Preserve unfinished features as roadmap entries, not completed release notes.
+
+Read uads.json and docs/UADS_REQUIREMENTS.md before substantial work. Validate with npm run uads:validate and record scoped functional evidence separately.

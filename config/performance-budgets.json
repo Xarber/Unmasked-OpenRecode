@@ -1,0 +1,17 @@
+{
+  "web": {
+    "lcpMs": 2500,
+    "inpMs": 200,
+    "cls": 0.1,
+    "initialJavaScriptBytes": 4000000
+  },
+  "native": {
+    "coldStartMs": 3000,
+    "peakMemoryMiB": 300
+  },
+  "backend": {
+    "healthP95Ms": 250,
+    "errorRate": 0.01
+  },
+  "measurement": "Web vitals at p75 on representative devices; native release binaries and API under representative load; JS budget enforced on every web export."
+}

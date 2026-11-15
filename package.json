@@ -23,13 +23,15 @@
     "worker": "tsx --env-file=.env apps/api/src/worker.ts",
     "branding": "node scripts/branding.mjs",
     "licenses": "node scripts/licenses.mjs",
-    "dev:services": "concurrently -k -n api,app 'npm run dev -w @unmasked/api' 'npm run web -w @unmasked/mobile'"
+    "dev:services": "concurrently -k -n api,app 'npm run dev -w @unmasked/api' 'npm run web -w @unmasked/mobile'",
+    "uads:validate": "node scripts/validate-uads.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/nodemailer": "^7.0.0",
     "@types/pg": "^8.15.0",
     "@types/react": "~19.3.0",
+    "ajv": "^8.20.0",
     "concurrently": "^9.2.0",
     "eslint": "^9.39.0",
     "prettier": "^3.6.0",
