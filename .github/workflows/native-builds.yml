@@ -53,7 +53,7 @@ jobs:
           (cd artifacts && shasum -a 256 Unmasked-* > SHA256SUMS.txt)
           find apps/mobile/build/Build/Products -name Unmasked -type f -exec file {} \; > artifacts/architectures.txt
           printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Unmasked-ios-${{ matrix.variant }}-${{ github.ref_name }}-${{ github.sha }}
           path: artifacts/
@@ -128,7 +128,7 @@ jobs:
           cp "apps/mobile/android/app/build/outputs/$source" "artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-android-${{ matrix.variant }}-$ANDROID_BUILD_MODE.${{ matrix.extension }}"
           (cd artifacts && sha256sum Unmasked-* > SHA256SUMS.txt)
           printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Unmasked-android-${{ matrix.variant }}-${{ env.ANDROID_BUILD_MODE }}-${{ github.ref_name }}-${{ github.sha }}
           path: artifacts/
