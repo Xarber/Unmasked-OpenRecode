@@ -277,7 +277,7 @@
     {
       "id": "UADS-QA-002",
       "title": "Compliance governance, validation and CI",
-      "sections": [41, 46, 47, 48, 49, 50],
+      "sections": [41, 46, 47, 48, 49, 50, 51, 52],
       "applicability": "Required",
       "condition": "Applies to Unmasked. Platform- or release-specific subrequirements follow the cited sections.",
       "priority": "required",
