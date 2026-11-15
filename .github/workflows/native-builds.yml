@@ -50,7 +50,7 @@ jobs:
           ditto -c -k --keepParent build/Build/Products/Release-iphonesimulator/Unmasked.app ../../artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-ios-simulator.app.zip
       - name: Record checksums and binary architecture
         run: |
-          shasum -a 256 artifacts/* > artifacts/SHA256SUMS.txt
+          (cd artifacts && shasum -a 256 Unmasked-* > SHA256SUMS.txt)
           find apps/mobile/build/Build/Products -name Unmasked -type f -exec file {} \; > artifacts/architectures.txt
           printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
       - uses: actions/upload-artifact@v4
@@ -126,7 +126,7 @@ jobs:
           source='${{ matrix.source }}'
           if [[ "$ANDROID_BUILD_MODE" == "debug" ]]; then source="${source//release/debug}"; fi
           cp "apps/mobile/android/app/build/outputs/$source" "artifacts/Unmasked-v0.1.0-${{ github.ref_name }}-${{ github.sha }}-android-${{ matrix.variant }}-$ANDROID_BUILD_MODE.${{ matrix.extension }}"
-          sha256sum artifacts/* > artifacts/SHA256SUMS.txt
+          (cd artifacts && sha256sum Unmasked-* > SHA256SUMS.txt)
           printf '%s\n' '${{ github.sha }}' > artifacts/COMMIT.txt
       - uses: actions/upload-artifact@v4
         with:

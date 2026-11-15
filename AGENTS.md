@@ -17,3 +17,5 @@ Native release publication and external store submission require separate author
 Keep modules split between app wiring, authentication, identity/connections, messaging, groups, product features, contracts and platform adapters. No plugin code execution. Portal/Echo hooks must be host-controlled and require explicit data-sharing consent. Update docs and the verification report for meaningful changes. Preserve unfinished features as roadmap entries, not completed release notes.
 
 Read uads.json and docs/UADS_REQUIREMENTS.md before substantial work. Validate with npm run uads:validate and record scoped functional evidence separately.
+
+Reconcile the ordered development queue in docs/ACTIVE_TASKS.md at the start and end of substantial work.
