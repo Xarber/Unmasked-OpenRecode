@@ -90,7 +90,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Configure API and persistent release signing identity
         run: |
           test -n "$EXPO_PUBLIC_API_URL" && [[ "$EXPO_PUBLIC_API_URL" == https://* ]]
