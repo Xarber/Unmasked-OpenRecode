@@ -3,6 +3,7 @@
 Implementation is an initial working release candidate foundation, not completion of the entire specification. See verification for actual test evidence.
 
 - Email/password registration, email verification, password reset, hashed opaque access/refresh tokens, refresh rotation, session listing and revocation. Development-only local mailbox is loopback-bound. SMTP is required in production; external SMTP delivery is not verified here.
+- A skippable first-run introduction with a replay action in Settings. Developer Options can show an isolated, read-only sample conversation using the real message bubble renderer. See the [active tasks](ACTIVE_TASKS.md) for remaining screenshot capture and verification work.
 - Pseudonymous profiles and mutable usernames using stable user IDs. Private-by-default discovery and disabled read receipts/typing. Minors cannot enable discovery or search users; private invitation tokens are required for their connection requests. This is self-declared age grouping, not age verification.
 - Contact requests with acceptance/rejection, accepted-contact direct chats, and private invitation URLs with 24-hour expiry. Block/unblock prevents interaction and ends Unmasked sessions.
 - Direct and small group conversations; contact-based group creation; group rename, administrator assignment, add/remove, leave and last-admin protection. Group cap: 16 participants. Every under-18 participant must already be an accepted contact of every other member; blocked pairs cannot be combined in a group.

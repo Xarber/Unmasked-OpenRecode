@@ -26,7 +26,6 @@ export function MessageBubble({
   action,
 }: Props) {
   const app = useApp(),
-    c = useColors(),
     [reportReason, setReportReason] = useState(''),
     [reporting, setReporting] = useState(false);
   const own = m.sender_id === app.user!.id,
@@ -55,25 +54,12 @@ export function MessageBubble({
               setReporting(false);
             }
           }}
-          style={{
-            backgroundColor: own ? c.action : c.panel,
-            borderRadius: 20,
-            borderBottomRightRadius: own ? 5 : 20,
-            borderBottomLeftRadius: own ? 20 : 5,
-            paddingHorizontal: 18,
-            paddingVertical: 12,
-            borderWidth: own ? 0 : 1,
-            borderColor: c.line,
-          }}
         >
-          {m.reply_to && (
-            <Label style={{ fontSize: 11, color: own ? '#DBDDFF' : c.muted, marginBottom: 5 }}>
-              ↳ Reply to a message
-            </Label>
-          )}
-          <Label style={{ color: own ? '#FFF' : c.text, fontSize: 15 }}>
-            {m.deleted_at ? 'Message deleted' : m.body}
-          </Label>
+          <MessageContent
+            own={own}
+            body={m.deleted_at ? 'Message deleted' : m.body}
+            reply={Boolean(m.reply_to)}
+          />
         </Pressable>
         <View
           style={{
@@ -177,5 +163,38 @@ export function MessageBubble({
         )}
       </View>
     </React.Fragment>
+  );
+}
+
+export function MessageContent({
+  own,
+  body,
+  reply = false,
+}: {
+  own: boolean;
+  body: string;
+  reply?: boolean;
+}) {
+  const c = useColors();
+  return (
+    <View
+      style={{
+        backgroundColor: own ? c.action : c.panel,
+        borderRadius: 20,
+        borderBottomRightRadius: own ? 5 : 20,
+        borderBottomLeftRadius: own ? 20 : 5,
+        paddingHorizontal: 18,
+        paddingVertical: 12,
+        borderWidth: own ? 0 : 1,
+        borderColor: c.line,
+      }}
+    >
+      {reply && (
+        <Label style={{ fontSize: 11, color: own ? '#DBDDFF' : c.muted, marginBottom: 5 }}>
+          ↳ Reply to a message
+        </Label>
+      )}
+      <Label style={{ color: own ? '#FFF' : c.text, fontSize: 15 }}>{body}</Label>
+    </View>
   );
 }

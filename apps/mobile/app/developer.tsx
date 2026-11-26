@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Switch, View } from 'react-native';
 import { ideaExport, mergeIdeas, type Idea } from '@unmasked/contracts';
 import { useApp } from '../src/provider';
 import { ideaStore, uuid } from '../src/storage';
 import { exportText } from '../src/export';
 import { API } from '../src/api';
 import { Shell, Card, Label, Field, Button, SectionHeading } from '../src/ui';
+import { SampleConversation } from '../src/components/SampleConversation';
+
 export default function Developer() {
+  const [samples, setSamples] = useState(false);
   const app = useApp(),
     [ideas, setIdeas] = useState<Idea[]>([]),
     [title, setTitle] = useState(''),
@@ -72,6 +75,16 @@ export default function Developer() {
       back
       scroll
     >
+      <Card>
+        <SectionHeading title="Screenshot previews" icon="camera-outline" />
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <Label>Sample Data</Label>
+          <Switch accessibilityLabel="Sample Data" value={samples} onValueChange={setSamples} />
+        </View>
+        {samples && <SampleConversation />}
+      </Card>
       {error !== '' && <Label style={{ color: '#C74359' }}>{error}</Label>}
       <Card>
         <SectionHeading title="Diagnostics" icon="pulse-outline" />

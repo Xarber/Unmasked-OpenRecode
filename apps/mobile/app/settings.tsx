@@ -25,7 +25,10 @@ interface Device {
   device: string;
   created_at: string;
 }
+import { useReplayIntroduction } from '../src/onboarding';
+
 export default function Settings() {
+  const replayIntroduction = useReplayIntroduction();
   const app = useApp(),
     [name, setName] = useState(app.user!.displayName),
     [handle, setHandle] = useState(app.user!.username),
@@ -290,6 +293,12 @@ export default function Settings() {
       </Card>
       <Card>
         <SectionHeading title="About Unmasked" icon="information-circle-outline" />
+        <Button
+          title="Replay introduction"
+          icon="play-outline"
+          secondary
+          onPress={replayIntroduction}
+        />
         <Label>Be real. No covers.</Label>
         <Label muted>
           An OpenRecode project. No ads, paid visibility, streaks or subscription gates.

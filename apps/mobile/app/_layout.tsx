@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Provider, useApp } from '../src/provider';
 import { Brand, Card, Label, Loading, Button, useColors } from '../src/ui';
+import { IntroductionProvider } from '../src/onboarding';
 import Auth from '../src/screens/Auth';
 import { MotionPreferences, useReducedMotionPreference } from '../src/motion';
 function Gate() {
@@ -81,7 +82,9 @@ export default function Layout() {
     <SafeAreaProvider>
       <Provider>
         <MotionPreferences>
-          <Gate />
+          <IntroductionProvider>
+            <Gate />
+          </IntroductionProvider>
         </MotionPreferences>
       </Provider>
     </SafeAreaProvider>

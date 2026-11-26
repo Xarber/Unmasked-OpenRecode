@@ -12,9 +12,9 @@
   "features": {
     "landing": "implemented",
     "pwa": "implemented",
-    "onboarding": "missing",
+    "onboarding": "implemented-verification-pending",
     "screenshotRendering": "missing",
-    "sampleData": "development-fixtures",
+    "sampleData": "isolated-conversation-preview",
     "developerOptions": "development-only",
     "ideas": "implemented",
     "serverSwitcher": "missing"
