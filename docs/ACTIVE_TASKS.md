@@ -22,3 +22,9 @@ Checkpoint verification: Node 24 locked dependency install, TypeScript, ESLint, 
 | 8 / UM-08 | Normal | Release receipts, screenshot maintenance and distribution synchronization. | Queued | Validate release artifacts and metadata before enabling publication. Requires authorized native channels. |
 | 9 / UM-09 | High | Integrate X-Center ID for Settings sync, friends and service data. Replace the existing app database completely. | In Progress | Official SDK 0.7.0 and exact callback `/api/account/callback` implemented. Issuer accepted authorization setup and local callback regression passed. Verify full staged sign-in and delegated permissions, obtain the separate verified service key, and preserve existing relational guarantees before any data cutover. [Migration details](features/XCENTER_ID.md). |
 | 10 / UM-10 | High | Create and verify the X-Center ID callback backend using the registered path. | Implemented | Fastify route and X-Center proxy/cookie behavior are configured. Test fixture callback succeeded. Public route still returns preview 503 until full backend staged and verified. |
+
+## Usage checkpoint · 2026-11-27
+
+UADS §0 paused new work with 6% remaining in the five-hour window (reset at 18:16 CET on 2026-11-27). Weekly usage remaining was 43% (reset at 12:07 CET on 2026-12-03). Changes at `ac1341a` are on `testing`. The isolated X-Center runtime passed the callback guard and live authorization initiation. The public route still serves preview HTTP 503.
+
+After rechecking both usage windows, stage the normal web/API combination with an isolated account and validate the authenticated provider callback and scoped data actions. The production stack still requires the previously deferred SMTP setup or a verified passwordless provisioning and recovery path. Service-data migration requires the separate verified-app database key and a storage design that preserves the current transactional guarantees.
