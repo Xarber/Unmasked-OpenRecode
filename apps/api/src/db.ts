@@ -48,6 +48,7 @@ export async function migrate(db: Db) {
   for (const [version, file] of [
     [1, '001_initial.sql'],
     [2, '002_access_tokens.sql'],
+    [3, '003_xcenter_identity.sql'],
   ] as const) {
     const sql = await readFile(new URL('../migrations/' + file, import.meta.url), 'utf8');
     await db.transaction(async (tx) => {

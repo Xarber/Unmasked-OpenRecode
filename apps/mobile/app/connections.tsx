@@ -7,6 +7,7 @@ import type { Person, ConnectionRequest } from '@unmasked/contracts';
 import { api } from '../src/api';
 import { useApp } from '../src/provider';
 import { Shell, Card, Field, Button, Label, Avatar, Empty, Loading } from '../src/ui';
+import { xcenterWebAvailable } from '../src/xcenterLogin';
 import { exportText } from '../src/export';
 export default function Connections() {
   const app = useApp(),
@@ -19,6 +20,13 @@ export default function Connections() {
     [title, setTitle] = useState(''),
     [selected, setSelected] = useState<string[]>([]),
     [error, setError] = useState('');
+  const [friends, setFriends] = useState<Person[]>();
+  const account = useQuery({
+    queryKey: ['xcenter-account', app.user?.id],
+    queryFn: () => api<{ signedInWithXCenter: boolean }>('/xcenter/account'),
+    enabled: xcenterWebAvailable,
+    retry: false,
+  });
   const q = useQuery({
     queryKey: ['connections'],
     queryFn: () =>
@@ -43,6 +51,32 @@ export default function Connections() {
   return (
     <Shell title="Connections" subtitle="Find your people. Keep your circle yours." scroll>
       {error !== '' && <Label style={{ color: '#C74359' }}>{error}</Label>}
+      {account.data?.signedInWithXCenter && (
+        <Card>
+          <Button
+            title="Find X-Center ID friends"
+            icon="people-outline"
+            onPress={() =>
+              void action(async () => {
+                setFriends(undefined);
+                setFriends(await api<Person[]>('/xcenter/friends'));
+              })
+            }
+          />
+          {friends?.length === 0 && <Label muted>No discoverable X-Center ID friends found.</Label>}
+          {friends?.map((friend) => (
+            <Button
+              key={friend.id}
+              title={friend.displayName}
+              secondary
+              onPress={() => {
+                setResults([friend]);
+                setSearch(friend.username);
+              }}
+            />
+          ))}
+        </Card>
+      )}
       <Card>
         <Label style={{ fontSize: 19, fontWeight: '600' }}>Start with a hello</Label>
         <Label muted>

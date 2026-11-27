@@ -23,6 +23,9 @@ services:
       DATABASE_URL: postgresql://unmasked:${POSTGRES_PASSWORD}@postgres:5432/unmasked
       WEB_ORIGIN: ${WEB_ORIGIN:?Set HTTPS WEB_ORIGIN}
       SMTP_URL: ${SMTP_URL:?Set SMTP_URL}
+      XCENTER_CLIENT_ID: ${XCENTER_CLIENT_ID:-}
+      XCENTER_CLIENT_SECRET: ${XCENTER_CLIENT_SECRET:-}
+      XCENTER_REDIRECT_URI: ${XCENTER_REDIRECT_URI:-}
       MAIL_FROM: ${MAIL_FROM}
       BUILD_COMMIT: ${BUILD_COMMIT:-development}
     depends_on:

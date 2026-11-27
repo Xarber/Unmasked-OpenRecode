@@ -73,24 +73,26 @@ export function authService(db: Db, c: Config, revoke: (sid: string) => void) {
       mailbox.push({ email: user.email, purpose, token: raw });
     }
   }
-  async function issue(user: UserRow, device: string, reply: FastifyReply) {
+  async function issue(user: UserRow, device: string, reply: FastifyReply, lifetime = 2592000) {
     const access = token(),
       refresh = token(),
       id = randomUUID();
-    await db.query(
-      "INSERT INTO sessions(id,user_id,access_hash,refresh_hash,access_until,expires_at,device) VALUES($1,$2,$3,$4,now()+interval '15 minutes',now()+interval '30 days',$5)",
-      [id, user.id, hash(access), hash(refresh), device],
-    );
-    await db.query(
-      "INSERT INTO access_tokens(token_hash,session_id,expires_at) VALUES($1,$2,now()+interval '15 minutes')",
-      [hash(access), id],
-    );
+    await db.transaction(async (tx) => {
+      await tx.query(
+        "INSERT INTO sessions(id,user_id,access_hash,refresh_hash,access_until,expires_at,device) VALUES($1,$2,$3,$4,now()+interval '15 minutes',now()+$5::integer*interval '1 second',$6)",
+        [id, user.id, hash(access), hash(refresh), lifetime, device],
+      );
+      await tx.query(
+        "INSERT INTO access_tokens(token_hash,session_id,expires_at) VALUES($1,$2,now()+interval '15 minutes')",
+        [hash(access), id],
+      );
+    });
     reply.setCookie('refresh', refresh, {
       httpOnly: true,
       secure: c.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/auth',
-      maxAge: 2592000,
+      maxAge: lifetime,
     });
     return { accessToken: access, refreshToken: refresh, profile: profile(user), sessionId: id };
   }
@@ -150,7 +152,7 @@ export function authService(db: Db, c: Config, revoke: (sid: string) => void) {
       const access = token(),
         refresh = token();
       const s = await db.transaction(async (tx) => {
-        const [row] = await tx.query<Session>(
+        const [row] = await tx.query<Session & { expires_at: Date }>(
           "UPDATE sessions SET access_hash=$1,refresh_hash=$2,access_until=now()+interval '15 minutes' WHERE refresh_hash=$3 AND expires_at>now() RETURNING *",
           [hash(access), hash(refresh), hash(raw!)],
         );
@@ -166,7 +168,7 @@ export function authService(db: Db, c: Config, revoke: (sid: string) => void) {
         secure: c.NODE_ENV === 'production',
         sameSite: 'strict',
         path: '/auth',
-        maxAge: 2592000,
+        maxAge: Math.max(0, Math.floor((new Date(s.expires_at).getTime() - Date.now()) / 1000)),
       });
       const [u] = await db.query<UserRow>('SELECT * FROM users WHERE id=$1', [s.user_id]);
       return { accessToken: access, refreshToken: refresh, profile: profile(u!), sessionId: s.id };
@@ -235,5 +237,5 @@ export function authService(db: Db, c: Config, revoke: (sid: string) => void) {
       return { ok: true };
     });
   }
-  return { requireSession, authenticate, registerRoutes, mailbox };
+  return { requireSession, authenticate, registerRoutes, mailbox, issue };
 }

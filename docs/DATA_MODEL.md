@@ -1,6 +1,6 @@
 # Data model
 
-Migrations 001_initial.sql and 002_access_tokens.sql are authoritative. schema_migrations guards replay. UUID primary keys preserve identity through username changes. Server timestamptz fields are used for ordering and read state.
+Migrations 001 through 003 are authoritative. The X-Center ID migration adds a unique issuer/subject link to the existing user UUID and short-lived browser-bound authorization attempts. schema_migrations guards replay. UUID primary keys preserve identity through username changes. Server timestamptz fields are used for ordering and read state.
 
 users stores authentication, identity and privacy attributes. Responses use explicit own-profile or public-person projections and never return password_hash. This first iteration keeps identity/preferences in one table, separate from messages; split them during a justified future migration. sessions references users and stores SHA-256 hashes of 256-bit random refresh credentials. access_tokens references a live session and stores independently expiring hashed access credentials so refreshing one browser tab does not invalidate another tab. Session deletion cascades to all its access tokens. auth_tokens covers verify/reset/invite with expiry. Session expiry 30 days; access expiry 15 minutes; verification/reset 30 minutes; invitation 24 hours.
 

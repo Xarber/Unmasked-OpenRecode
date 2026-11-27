@@ -23,7 +23,7 @@ Client credentials are in memory (access), native SecureStore (refresh) or web H
 
 ## Deliberate constraints
 
-Single API process for realtime fan-out; Redis adapter and distributed rate limiting are required before scaling horizontally. Redis/MinIO optional Compose services are preparation, not active message/media dependencies. No E2EE, attachments, push, passkeys, provider login, P2P transport or automatic native updates are implemented. Server-side history is required for cross-device sync. No proprietary backend dependency.
+Single API process for realtime fan-out; Redis adapter and distributed rate limiting are required before scaling horizontally. Redis/MinIO optional Compose services are preparation, not active message/media dependencies. The opt-in [X-Center ID integration](features/XCENTER_ID.md) adds a confidential web callback, per-user appearance records and consented friend lookup. Native provider sign-in remains pending. No E2EE, attachments, push, P2P transport or automatic native updates are implemented. Server-side history is required for cross-device sync. The managed provider is optional for existing development and preview configurations.
 
 ConversationOptions and MessageBubble separate group/consent controls and per-message rendering/actions from the timeline route. PostgreSQL cursors carry the server timestamp with full microsecond precision, avoiding JavaScript Date truncation at page boundaries.
 

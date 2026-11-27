@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import { xcenterLoginResult } from './xcenterLogin';
 import { developerTools } from './distribution';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { AppState, Platform, useColorScheme } from 'react-native';
@@ -150,13 +151,27 @@ export function Provider({ children }: { children: React.ReactNode }) {
       try {
         setThemeState(await read('theme', 'system'));
         const preview = Platform.OS === 'web' && process.env.EXPO_PUBLIC_WEB_PREVIEW === '1';
-        if (!preview && !(await read('signedOut', false))) {
+        const xcenterResult = xcenterLoginResult();
+        const providerSignIn = xcenterResult === 'signed-in';
+        if (xcenterResult === 'linked')
+          setNotice('X-Center ID linked. You can now use it to sign in.');
+        if (xcenterResult && !['signed-in', 'linked'].includes(xcenterResult)) {
+          setNotice(
+            xcenterResult === 'unlinked'
+              ? 'Link X-Center ID in Settings before signing in.'
+              : xcenterResult === 'cancelled'
+                ? 'X-Center ID sign-in was cancelled.'
+                : 'X-Center ID could not complete this request. Try again.',
+          );
+        }
+        if (!preview && (providerSignIn || !(await read('signedOut', false)))) {
           try {
             const result = await refresh();
+            if (providerSignIn) await write('signedOut', false);
             setUser(result.profile);
             await write('offlineProfile', result.profile);
           } catch (e) {
-            if (e instanceof TypeError) {
+            if (!providerSignIn && e instanceof TypeError) {
               const cached = await read<Profile | null>('offlineProfile', null);
               if (cached) {
                 setUser(cached);

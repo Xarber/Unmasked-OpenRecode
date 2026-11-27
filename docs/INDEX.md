@@ -10,3 +10,4 @@
 - [Branding](BRANDING.md), [extension architecture](PLUGIN_SYSTEM.md)
 - [Developer Ideas](features/IDEAS.md), [Ideas collection](IDEAS.json), [messaging reliability](features/MESSAGING.md)
 - [UADS implementation plan](UADS_36_PLAN.md), [UADS browser verification](reports/UADS-36.md), [private X-Center preview](platforms/XCENTER.md)
+- [X-Center ID integration and migration](features/XCENTER_ID.md)

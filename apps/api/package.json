@@ -8,17 +8,19 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "@unmasked/contracts": "*",
     "@electric-sql/pglite": "0.5.15",
-    "fastify": "5.12.8",
-    "@fastify/cors": "^11.0.0",
     "@fastify/cookie": "^11.0.0",
-    "@fastify/rate-limit": "^10.0.0",
+    "@fastify/cors": "^11.0.0",
     "@fastify/helmet": "^13.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "@unmasked/contracts": "*",
+    "@xcenter-id/client": "file:../../vendor/xcenter-id/xcenter-id-client-0.7.0.tgz",
+    "@xcenter-id/server": "file:../../vendor/xcenter-id/xcenter-id-server-0.7.0.tgz",
+    "fastify": "5.12.8",
+    "nodemailer": "^10.3.1",
     "pg": "^8.16.0",
     "socket.io": "^4.8.0",
-    "zod": "^4.0.0",
-    "nodemailer": "^10.3.1"
+    "zod": "^4.0.0"
   },
   "license": "AGPL-3.0-only"
 }

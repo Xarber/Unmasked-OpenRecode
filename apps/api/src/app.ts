@@ -15,11 +15,16 @@ import type { Db } from './db.js';
 import type { Config } from './config.js';
 import { authService, type UserRow } from './auth.js';
 import { fail } from './security.js';
-export async function createApp(db: Db, c: Config) {
+import { registerXCenter } from './xcenter.js';
+export async function createApp(
+  db: Db,
+  c: Config,
+  createXCenterOAuth?: Parameters<typeof registerXCenter>[4],
+) {
   const app = Fastify({
     logger:
       c.NODE_ENV === 'production'
-        ? { redact: ['req.headers.authorization', 'req.headers.cookie', 'body'] }
+        ? { redact: ['req.headers.authorization', 'req.headers.cookie', 'req.url', 'body'] }
         : false,
     bodyLimit: 32768,
     trustProxy: process.env.TRUST_XCENTER_PROXY === '1' ? (_address, hop) => hop === 0 : false,
@@ -53,6 +58,7 @@ export async function createApp(db: Db, c: Config) {
   });
   const auth = authService(db, c, (sid) => io.in(`session:${sid}`).disconnectSockets(true));
   await auth.registerRoutes(app);
+  await registerXCenter(app, db, c, auth, createXCenterOAuth);
   io.use(async (socket, next) => {
     try {
       if (socket.handshake.headers.origin && socket.handshake.headers.origin !== c.WEB_ORIGIN)

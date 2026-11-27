@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import { useQuery } from '@tanstack/react-query';
+import { startXCenterLogin, xcenterWebAvailable } from '../xcenterLogin';
 import { developerTools } from '../distribution';
 import React, { useState } from 'react';
 import { View, ScrollView, Text, Pressable, useWindowDimensions, Linking } from 'react-native';
@@ -21,6 +23,22 @@ export default function Auth() {
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [message, setMessage] = useState('');
+  const xcenter = useQuery({
+    queryKey: ['xcenter-available'],
+    queryFn: () => api<{ available: boolean }>('/auth/xcenter/status'),
+    enabled: xcenterWebAvailable,
+    retry: false,
+  });
+  async function providerSignIn() {
+    setBusy(true);
+    setError('');
+    try {
+      await startXCenterLogin({ mode: 'signin' });
+    } catch (e) {
+      setError((e as Error).message);
+      setBusy(false);
+    }
+  }
   async function submit() {
     setError('');
     setBusy(true);
@@ -174,6 +192,15 @@ export default function Auth() {
               <Card>
                 <Label>{message}</Label>
               </Card>
+            )}
+            {app.notice !== '' && <Label>{app.notice}</Label>}
+            {mode === 'login' && xcenter.data?.available && (
+              <Button
+                icon="key-outline"
+                title="Sign in with X-Center ID"
+                disabled={busy}
+                onPress={() => void providerSignIn()}
+              />
             )}
             {error !== '' && <Label style={{ color: '#C74359' }}>{error}</Label>}
             {(mode === 'login' || mode === 'register' || mode === 'forgot') && (

@@ -10,6 +10,9 @@ const schema = z.object({
   DATA_DIR: z.string().default('.data/unmasked'),
   WEB_ORIGIN: z.url().default('http://localhost:8081'),
   SMTP_URL: z.string().optional(),
+  XCENTER_CLIENT_ID: z.string().optional(),
+  XCENTER_CLIENT_SECRET: z.string().optional(),
+  XCENTER_REDIRECT_URI: z.string().optional(),
   MAIL_FROM: z.string().default('Unmasked <noreply@example.invalid>'),
 });
 export function config() {

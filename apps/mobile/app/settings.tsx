@@ -25,6 +25,7 @@ interface Device {
   device: string;
   created_at: string;
 }
+import { XCenterSettings } from '../src/components/XCenterSettings';
 import { useReplayIntroduction } from '../src/onboarding';
 
 export default function Settings() {
@@ -67,6 +68,7 @@ export default function Settings() {
   }
   return (
     <Shell title="Settings" subtitle="Make this space feel like yours." scroll>
+      <XCenterSettings />
       <Card>
         <SectionHeading title="Your profile" icon="person-circle-outline" />
         <Field label="Display name" value={name} onChangeText={setName} />

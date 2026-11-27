@@ -24,7 +24,8 @@
     "branding": "node scripts/branding.mjs",
     "licenses": "node scripts/licenses.mjs",
     "dev:services": "concurrently -k -n api,app 'npm run dev -w @unmasked/api' 'npm run web -w @unmasked/mobile'",
-    "uads:validate": "node scripts/validate-uads.mjs"
+    "uads:validate": "node scripts/validate-uads.mjs",
+    "xcenter:check-storage": "tsx --env-file-if-exists=.env apps/api/src/check-xcenter-storage.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
