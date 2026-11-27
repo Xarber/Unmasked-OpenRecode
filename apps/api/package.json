@@ -12,7 +12,7 @@
     "@fastify/cookie": "^11.0.0",
     "@fastify/cors": "^11.0.0",
     "@fastify/helmet": "^13.0.0",
-    "@fastify/rate-limit": "^10.0.0",
+    "@fastify/rate-limit": "^11.3.0",
     "@unmasked/contracts": "*",
     "@xcenter-id/client": "file:../../vendor/xcenter-id/xcenter-id-client-0.7.0.tgz",
     "@xcenter-id/server": "file:../../vendor/xcenter-id/xcenter-id-server-0.7.0.tgz",
